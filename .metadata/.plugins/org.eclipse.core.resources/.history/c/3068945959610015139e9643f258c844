@@ -1,0 +1,34 @@
+package server;
+
+import java.net.*;
+import java.io.*;
+
+public class EchoMultiServer {
+
+	private static ServerSocket serverSocket = null;
+	
+	public static void main ( String[] args )
+	{
+		try
+		{
+			serverSocket = new ServerSocket( 4000 );
+		} catch( IOException e ) {
+			System.out.println( "EchoMultServer: could not listen on port: 4000, " + e.toString() );
+			System.exit( 1 );
+		}
+		System.out.println( "EchoMultiServer listening on port: 4000" );
+		boolean listening = true;
+		while( listening )
+		{
+			//EJERCICIO: aceptar una nueva conexión
+			//EJERCICIO: y crear un Thread para que la gestione
+		}
+		
+		try 
+		{
+			serverSocket.close();
+		} catch( IOException e ) {
+			System.err.println( "Could not close server socket. " + e.getMessage() );
+		}
+	}
+}

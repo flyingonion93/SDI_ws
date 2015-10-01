@@ -1,0 +1,21 @@
+package server;
+
+import java.net.*;
+import java.io.*;
+
+public class EchoMultiServer {
+
+	private static ServerSocket serverSocket = null;
+	
+	public static void main ( String[] args )
+	{
+		try
+		{
+			serverSocket = new ServerSocket( 4000 );
+		} catch( IOException e ) {
+			System.out.println( "EchoMultServer: could not listen on port: 4000, " + e.toString() );
+			System.exit( 1 );
+		}
+	}
+	
+}

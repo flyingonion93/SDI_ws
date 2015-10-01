@@ -1,0 +1,17 @@
+package client;
+
+public class Echo 
+{
+	
+	private static EchoObjectStub ss;
+	
+	public static void main( String[] args )
+	{
+		if( args.length < 2 )
+		{
+			System.out.println( "Usage: Echo <host> <port#>" );
+			System.exit( 1 );
+		}
+	}
+
+}

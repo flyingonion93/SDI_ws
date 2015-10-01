@@ -1,0 +1,23 @@
+package client;
+
+import java.io.*;
+import java.net.*;
+
+public class Echo 
+{
+	
+	private static EchoObjectStub ss;
+	
+	public static void main( String[] args )
+	{
+		if( args.length < 2 )
+		{
+			System.out.println( "Usage: Echo <host> <port#>" );
+			System.exit( 1 );
+		}
+		ss = //EJERCICIO: crear una instancia del stub
+		ss.setHostAndPort( args[0], Integer.parseInt( args[1] ) );
+		BufferedReader stdIn = new BufferedReader( new InputStreamReader( System.in ) );
+	}
+
+}
