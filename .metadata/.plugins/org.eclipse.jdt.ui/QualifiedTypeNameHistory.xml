@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <qualifiedTypeNameHistroy>
-<fullyQualifiedTypeName name="rmi.EchoInt"/>
 <fullyQualifiedTypeName name="java.rmi.RemoteException"/>
 <fullyQualifiedTypeName name="server.EchoObject"/>
 <fullyQualifiedTypeName name="client.EchoObjectStub"/>
+<fullyQualifiedTypeName name="rmi.EchoInt"/>
 </qualifiedTypeNameHistroy>

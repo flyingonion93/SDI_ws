@@ -27,6 +27,7 @@ public class Echo2
 				input = stdIn.readLine();
 				output = ss.echo( input );
 				stdOut.println( output );
+				stdOut.flush();
 			}
 		} catch( UnknownHostException e ) {
 			System.err.println( "Don't know about host: " + args[0] );

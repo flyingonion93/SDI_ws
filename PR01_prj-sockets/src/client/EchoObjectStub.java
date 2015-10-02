@@ -1,18 +1,20 @@
 package client;
 
 import java.net.*;
+
+import rmi.*;
 import java.io.*;
 
-public class EchoObjectStub 
+public class EchoObjectStub implements EchoInt
 {
 	
 	private Socket echoSocket = null;
 	private PrintWriter os = null;
 	private BufferedReader is = null;
 	private String host = "localhost";
-	private int port = 7;
+	private int port = 1200;
 	private String output = "Error";
-	//private boolean connected = false;
+	private boolean connected = false;
 	
 	public void setHostAndPort( String host, int port )
 	{
@@ -23,7 +25,7 @@ public class EchoObjectStub
 	public String echo( String input ) throws java.rmi.RemoteException
 	{
 		connect();
-		if( echoSocket != null && os != null && is != null )
+		if( connected && os != null && is != null )
 		{
 			try
 			{
@@ -51,6 +53,7 @@ public class EchoObjectStub
 			e.printStackTrace();
 			return;
 		}
+		connected = true;
 	}
 	
 	private synchronized void disconnect() throws java.rmi.RemoteException 
@@ -58,11 +61,14 @@ public class EchoObjectStub
 		try
 		{
 			echoSocket.close();
+			os.close();
+			is.close();
 		} catch( IOException e )
 		{
 			System.err.println( "Communication error" );
 			e.printStackTrace();
 			return;
 		}
+		connected = false;
 	}
 }
