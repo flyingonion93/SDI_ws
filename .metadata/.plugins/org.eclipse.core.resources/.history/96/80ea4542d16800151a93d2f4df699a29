@@ -1,0 +1,7 @@
+package interfaces.echo;
+
+import java.rmi.Remote;
+public interface EchoInt
+{
+	String echo( String a ) throws java.rmi.RemoteException;
+}
