@@ -1,0 +1,27 @@
+package server;
+
+import java.rmi.RemoteException;
+import java.rmi.registry.LocaleRegistry;
+import java.rmi.registry.Registry;
+import java.rmi.server.UnicastRemoteObject;
+import java.util.ArrayList;
+import interfaces.compute.ComputeServerInt;
+import interfaces.compute.TaskInt;
+
+public class ServCompute implements ComputeServerInt
+{
+	//EJERCICIO: define a Task container( e.g an ArrayList )
+	
+	protected ServCompute()
+	{
+		super();
+	}
+	
+	@Override
+	public int loadTask( TaskInt a ) throws RemoteException
+	{
+		System.out.println( "Loading TASK" );
+		//EJERCICIO: add task to the defined container
+		return //EJERCICIO: returns an appropiate taskid
+	}
+}

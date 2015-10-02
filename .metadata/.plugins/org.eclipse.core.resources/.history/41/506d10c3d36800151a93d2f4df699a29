@@ -1,0 +1,21 @@
+package client;
+
+import java.io.*;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+import interfaces.echo.EchoInt;
+
+public class EchoRMI 
+{
+	/**
+	 * @param args
+	 */
+	public static void main( String[] args )
+	{
+		if( args.length < 1 )
+		{
+			System.out.println( "Uso echo <host>" );
+			System.exit(1);
+		}
+	}
+}
