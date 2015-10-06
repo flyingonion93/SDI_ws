@@ -6,7 +6,7 @@ import java.net.*;
 public class Echo3 
 {
 	
-	private static EchoObjectStub4 ss;
+	private static EchoObjectStub2 ss;
 	
 	public static void main( String[] args )
 	{
@@ -15,16 +15,20 @@ public class Echo3
 			System.out.println( "Usage: Echo <host> <port#>" );
 			System.exit( 1 );
 		}
-		ss = new EchoObjectStub4//EJERCICIO: crear una instancia del stub
+		ss = new EchoObjectStub2();
 		ss.setHostAndPort( args[0], Integer.parseInt( args[1] ) );
 		BufferedReader stdIn = new BufferedReader( new InputStreamReader( System.in ) );
 		PrintWriter stdOut = new PrintWriter( System.out );
 		String input, output;
 		try
 		{
-			//EJERCICIO: el bucle infinito:
-			//EJERCICIO: Leer de teclado //EJERCICIO: Invocar el stub
-			//EJERCICIO: Imprimir por pantalla
+			while( true )
+			{
+				input = stdIn.readLine();
+				output = ss.echo( input );
+				stdOut.println( output );
+				stdOut.flush();
+			}
 		} catch( UnknownHostException e ) {
 			System.err.println( "Don't know about host: " + args[0] );
 		} catch( IOException e ) {

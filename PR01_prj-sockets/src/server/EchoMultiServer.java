@@ -28,8 +28,7 @@ public class EchoMultiServer {
 			{
 				e.printStackTrace();
 			}
-			EchoMultiServerThread serverThread = new EchoMultiServerThread( clientSocket );
-			serverThread.start();
+			new EchoMultiServerThread( clientSocket ).start();
 		}
 		
 		try 
