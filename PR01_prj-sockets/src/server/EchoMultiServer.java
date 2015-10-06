@@ -18,10 +18,18 @@ public class EchoMultiServer {
 		}
 		System.out.println( "EchoMultiServer listening on port: 4000" );
 		boolean listening = true;
+		Socket clientSocket = null;
 		while( listening )
-		{
-			//EJERCICIO: aceptar una nueva conexión
-			//EJERCICIO: y crear un Thread para que la gestione
+		{ 
+			try
+			{
+				clientSocket = serverSocket.accept();				
+			} catch( IOException e )
+			{
+				e.printStackTrace();
+			}
+			EchoMultiServerThread serverThread = new EchoMultiServerThread( clientSocket );
+			serverThread.start();
 		}
 		
 		try 
@@ -53,8 +61,8 @@ class EchoMultiServerThread extends Thread
 		eo = new EchoObject();
 		try
 		{
-			is = new BufferedReader( new InputStreamReader( /*EJERCICIO ... )*/ );							
-			os = new PrintWriter ( /*EJERCICIO ...*/ );
+			is = new BufferedReader( new InputStreamReader( clientSocket.getInputStream() ) );							
+			os = new PrintWriter ( clientSocket.getOutputStream() );
 		} catch( IOException e ) {
 			System.err.println( "Error sending/receiving " + e.getMessage() );
 			e.printStackTrace();
@@ -74,8 +82,9 @@ class EchoMultiServerThread extends Thread
 		{
 			while( ( inputline = is.readLine() ) != null )
 			{
-				//EJERCICIO: Invocar el objeto
-				//EJERCICIO: y devolver la respuesta por el socket 
+				System.out.println( inputline );	
+				os.println( eo.echo( inputline ) );	
+				os.flush(); 
 			}
 			os.close();
 			is.close();
