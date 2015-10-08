@@ -55,7 +55,7 @@ class EchoMultiServerThread extends Thread
 	
 	EchoMultiServerThread( Socket socket )
 	{
-		super( "EchoMultiServerThread" );
+		super( "EchoMultiServerThread(" + socket.getRemoteSocketAddress() + ")" );
 		clientSocket = socket;
 		eo = new EchoObject();
 		try
