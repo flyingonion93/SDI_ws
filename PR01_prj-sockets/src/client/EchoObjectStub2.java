@@ -51,23 +51,25 @@ public class EchoObjectStub2 implements EchoInt
 			toutActive = false;
 			tout.cancel();
 		}
-		try
-		{
-			echoSocket = new Socket( host, port );
-			is = new BufferedReader( new InputStreamReader( echoSocket.getInputStream() ) );
-			os = new PrintWriter( echoSocket.getOutputStream() );
-		} catch( IOException e )
-		{
-			System.err.println( "Connection error" );
-			e.printStackTrace();
-			return;
+		else{
+			try
+			{
+				echoSocket = new Socket( host, port );
+				is = new BufferedReader( new InputStreamReader( echoSocket.getInputStream() ) );
+				os = new PrintWriter( echoSocket.getOutputStream() );
+			} catch( IOException e )
+			{
+				System.err.println( "Connection error" );
+				e.printStackTrace();
+				return;
+			}
+			connected = true;
 		}
-		connected = true;
 	}
 	
 	private synchronized void disconnect()
 	{
-		if( toutActive )
+		if( connected && toutActive )
 		{
 			try
 			{
