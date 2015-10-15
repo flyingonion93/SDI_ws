@@ -1,3 +1,0 @@
-grant codeBase "file:///home/ubuntu_sdi/SDI/PR02_prj-rmi_Interfaces/bin/" {
-	permission java.security.AllPermission "", "";
-}

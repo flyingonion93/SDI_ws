@@ -1,0 +1,7 @@
+grant codeBase "file:/home/ubuntu_sdi/SDI/PR02_prj-rmi_Interfaces/bin/" {
+	permission java.security.AllPermission "", "";
+};
+
+grant {
+	permission java.net.SocketPermission "localhost:1024-65535", "connect,accept,resolve";
+};

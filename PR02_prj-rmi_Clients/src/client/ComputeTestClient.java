@@ -16,25 +16,6 @@ public class ComputeTestClient implements Serializable
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	class TaskEcho implements TaskInt, Serializable
-	{
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = 1L;
-		
-		@Override
-		public Object execute() throws RemoteException
-		{
-			//EJERCICIO
-		}
-		
-		public Object execute( Object params ) throws RemoteException
-		{
-			//EJERCICIO
-		}
-	}
-	
 	public TaskInt echoTask = new TaskEcho();
 	
 	public static void vmain( String[] args )
