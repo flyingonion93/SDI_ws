@@ -8,6 +8,13 @@ public class EchoServerImpl extends corba.EchoPOA {
 	/**
 	 * Constructor for EchoServerImpl 
 	 */
+	EchoObject eo = new EchoObject();
+	
 	public EchoServerImpl() {
 	}
+
+	@Override
+	public String Echo(String input) {
+		return eo.echo( input );
+	}	
 }

@@ -4,6 +4,8 @@ import java.io.FileOutputStream;
 import java.io.PrintWriter;
 import java.util.Properties;
 
+import org.omg.CosNaming.NamingContextExt;
+import org.omg.CosNaming.NamingContextExtHelper;
 import org.omg.PortableServer.IdAssignmentPolicyValue;
 // import org.omg.PortableServer.LifespanPolicyValue;
 import org.omg.PortableServer.POA;
@@ -17,6 +19,8 @@ public class Server_AOM {
 		Properties props = System.getProperties();
 		props.setProperty("org.omg.CORBA.ORBClass", "com.sun.corba.se.internal.POA.POAORB");
 		props.setProperty("org.omg.CORBA.ORBSingletonClass", "com.sun.corba.se.internal.corba.ORBSingleton");
+//		props.put( "org.omg.CORBA.ORBInitialHost", "localhost" );
+//		props.put( "org.omg.CORBA.ORBInitialPort", "1050") ;
 
 		try {
 			// Initialize the ORB.
@@ -50,9 +54,9 @@ public class Server_AOM {
 			obj = poa.servant_to_reference(servant);
 
 			// ---- Uncomment below to enable Naming Service access. ----
-			// org.omg.CORBA.Object ncobj = orb.resolve_initial_references("NameService");
-			// NamingContextExt nc = NamingContextExtHelper.narrow(ncobj);
-			// nc.bind(nc.to_name("MyServerObject"), obj);
+//			org.omg.CORBA.Object ncobj = orb.resolve_initial_references("NameService");
+//			NamingContextExt nc = NamingContextExtHelper.narrow(ncobj);
+//			nc.bind(nc.to_name("MyServerObject"), obj);
 
 			PrintWriter ps = new PrintWriter(new FileOutputStream(new File("server.ior")));
 			ps.println(orb.object_to_string(obj));
