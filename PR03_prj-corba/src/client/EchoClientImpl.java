@@ -16,6 +16,7 @@ import org.omg.CosNaming.NamingContextPackage.CannotProceed;
 import org.omg.CosNaming.NamingContextPackage.NotFound;
 
 class EchoClientImpl {
+	
 	private corba.Echo target = null;
 	private org.omg.CORBA.ORB orb = null;
 
@@ -46,30 +47,34 @@ class EchoClientImpl {
 	 */
 	public void initORB(String[] args) throws IOException {
 
+		/**
+		 * Hay que iniciar el orbd desde el JDK
+		 * Configuración de la VM: -Dorg.omg.CORBA.ORBInitialHost=localhost
+		 */	
 		Properties props = System.getProperties();
 		props.setProperty("org.omg.CORBA.ORBClass", "com.sun.corba.se.internal.POA.POAORB");
 		props.setProperty("org.omg.CORBA.ORBSingletonClass", "com.sun.corba.se.internal.corba.ORBSingleton");
-		//props.put( "org.omg.CORBA.ORBInitialHost", "localhost" );
-		//props.put( "org.omg.CORBA.ORBInitialPort", "1050") ;
+		props.put( "org.omg.CORBA.ORBInitialHost", "localhost" );
+		props.put( "org.omg.CORBA.ORBInitialPort", "1050") ;
 
 		// Initialize the ORB
 		orb = org.omg.CORBA.ORB.init((String[])args, props);
 
 		// ---- Uncomment below to enable Naming Service access. ----
-//		try {
-//			org.omg.CORBA.Object ncobj = orb.resolve_initial_references("NameService");
-//			ncobj = orb.resolve_initial_references("NameService");
-//			NamingContextExt nc = NamingContextExtHelper.narrow(ncobj);
-//			org.omg.CORBA.Object obj = nc.resolve_str("MyServerObject");
-//			target = corba.EchoHelper.narrow(obj);
-//		} catch (org.omg.CORBA.ORBPackage.InvalidName | NotFound | CannotProceed | org.omg.CosNaming.NamingContextPackage.InvalidName e) {
-//			e.printStackTrace();
-//		}
+		try {
+			org.omg.CORBA.Object ncobj = orb.resolve_initial_references("NameService");
+			ncobj = orb.resolve_initial_references("NameService");
+			NamingContextExt nc = NamingContextExtHelper.narrow(ncobj);
+			org.omg.CORBA.Object obj = nc.resolve_str("MyServerObject");
+			target = corba.EchoHelper.narrow(obj);
+		} catch (org.omg.CORBA.ORBPackage.InvalidName | NotFound | CannotProceed | org.omg.CosNaming.NamingContextPackage.InvalidName e) {
+			e.printStackTrace();
+		}
 
-		LineNumberReader input = new LineNumberReader(new FileReader("server.ior"));
-		String ior = input.readLine();
-		org.omg.CORBA.Object obj = orb.string_to_object(ior);
-		target = corba.EchoHelper.narrow(obj);		
+		//LineNumberReader input = new LineNumberReader(new FileReader("server.ior"));
+		//String ior = input.readLine();
+		//org.omg.CORBA.Object obj = orb.string_to_object(ior);
+		//target = corba.EchoHelper.narrow(obj);		
 	}
 
 	/**

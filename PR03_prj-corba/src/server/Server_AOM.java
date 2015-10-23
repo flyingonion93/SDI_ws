@@ -16,11 +16,15 @@ public class Server_AOM {
 
 	public static void main(String[] args) {
 
+		/**
+		 * Hay que iniciar el orbd desde el JDK
+		 * Configuración de la VM: -Dorg.omg.CORBA.ORBInitialHost=localhost
+		 */
 		Properties props = System.getProperties();
 		props.setProperty("org.omg.CORBA.ORBClass", "com.sun.corba.se.internal.POA.POAORB");
 		props.setProperty("org.omg.CORBA.ORBSingletonClass", "com.sun.corba.se.internal.corba.ORBSingleton");
-//		props.put( "org.omg.CORBA.ORBInitialHost", "localhost" );
-//		props.put( "org.omg.CORBA.ORBInitialPort", "1050") ;
+		props.put( "org.omg.CORBA.ORBInitialHost", "localhost" );
+		props.put( "org.omg.CORBA.ORBInitialPort", "1050") ;
 
 		try {
 			// Initialize the ORB.
@@ -54,13 +58,13 @@ public class Server_AOM {
 			obj = poa.servant_to_reference(servant);
 
 			// ---- Uncomment below to enable Naming Service access. ----
-//			org.omg.CORBA.Object ncobj = orb.resolve_initial_references("NameService");
-//			NamingContextExt nc = NamingContextExtHelper.narrow(ncobj);
-//			nc.bind(nc.to_name("MyServerObject"), obj);
+			org.omg.CORBA.Object ncobj = orb.resolve_initial_references("NameService");
+			NamingContextExt nc = NamingContextExtHelper.narrow(ncobj);
+			nc.bind(nc.to_name("MyServerObject"), obj);
 
-			PrintWriter ps = new PrintWriter(new FileOutputStream(new File("server.ior")));
-			ps.println(orb.object_to_string(obj));
-			ps.close();
+			//PrintWriter ps = new PrintWriter(new FileOutputStream(new File("server.ior")));
+			//ps.println(orb.object_to_string(obj));
+			//ps.close();
 
 			System.out.println("CORBA Server ready...");
 
