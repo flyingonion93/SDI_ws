@@ -18,6 +18,7 @@ public class Server_AOM {
 
 		/**
 		 * Hay que iniciar el orbd desde el JDK
+		 * (orbd -ORBInitialPort 1050)
 		 * Configuración de la VM: -Dorg.omg.CORBA.ORBInitialHost=localhost
 		 */
 		Properties props = System.getProperties();
