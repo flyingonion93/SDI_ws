@@ -39,7 +39,6 @@ public class EchoObjectRMI implements EchoInt
 	{
 		if( System.getSecurityManager() == null )
 			System.setSecurityManager( new SecurityManager() );
-		
 		try
 		{
 			Registry reg = LocateRegistry.getRegistry();
