@@ -1,6 +1,5 @@
 package server;
 
-import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -43,8 +42,8 @@ public class EchoObjectRMI implements EchoInt
 		try
 		{
 			Registry reg = LocateRegistry.getRegistry();
-			EchoInt stub = (EchoInt) UnicastRemoteObject.exportObject( (Remote) new EchoObjectRMI(),  0 );
-			reg.rebind( "miEcho", (Remote) stub );
+			EchoInt stub = (EchoInt) UnicastRemoteObject.exportObject( new EchoObjectRMI(),  0 );
+			reg.rebind( "miEcho", stub );
 		}
 		catch ( RemoteException e )
 		{

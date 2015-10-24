@@ -8,6 +8,7 @@ import java.rmi.Naming;
 import java.rmi.RemoteException;
 import interfaces.compute.ComputeServerInt;
 import interfaces.compute.TaskInt;
+import interfaces.echo.EchoInt;
 
 public class ComputeTestClient implements Serializable 
 {
@@ -37,6 +38,7 @@ public class ComputeTestClient implements Serializable
 		
 		try
 		{
+			ComputeServerInt cs = (ComputeServerInt) Naming.lookup("//"+args[0]+"/miComputeServer");
 			//EJERCICIO: "lookup" the Compute server RMI object
 			//EJERCICIO: load the task (computeClient.echoTask) to the computeServer
 			
@@ -44,7 +46,7 @@ public class ComputeTestClient implements Serializable
 			stdOut.flush();
 			while( ( input = stdIn.readLine() ) != null )
 			{
-				//EJERCICIO: execute the loaded task. Get the response in "output"
+				output = echoTask.execute();//EJERCICIO: execute the loaded task. Get the response in "output"
 				stdOut.println( output );
 				stdOut.print( "> " );
 				stdOut.flush();

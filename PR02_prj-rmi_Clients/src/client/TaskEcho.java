@@ -14,11 +14,13 @@ class TaskEcho implements TaskInt, Serializable
 		@Override
 		public Object execute() throws RemoteException
 		{
+			return 
 			//EJERCICIO
 		}
 		
 		public Object execute( Object params ) throws RemoteException
 		{
+			return 
 			//EJERCICIO
 		}
 	}
