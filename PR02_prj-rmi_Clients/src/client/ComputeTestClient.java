@@ -38,15 +38,16 @@ public class ComputeTestClient implements Serializable
 		
 		try
 		{
-			ComputeServerInt cs = (ComputeServerInt) Naming.lookup("//"+args[0]+"/miComputeServer");
 			//EJERCICIO: "lookup" the Compute server RMI object
+			ComputeServerInt cs = (ComputeServerInt) Naming.lookup("//"+args[0]+"/miComputeServer");
 			//EJERCICIO: load the task (computeClient.echoTask) to the computeServer
-			
+			int taskid = cs.loadTask( computeClient.echoTask );
 			stdOut.println("> ");
 			stdOut.flush();
 			while( ( input = stdIn.readLine() ) != null )
 			{
-				output = echoTask.execute();//EJERCICIO: execute the loaded task. Get the response in "output"
+				//EJERCICIO: execute the loaded task. Get the response in "output"
+				output = (String) cs.executeTask( taskid, input );
 				stdOut.println( output );
 				stdOut.print( "> " );
 				stdOut.flush();

@@ -7,7 +7,6 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import interfaces.compute.ComputeServerInt;
 import interfaces.compute.TaskInt;
-import interfaces.echo.EchoInt;
 
 public class ServCompute implements ComputeServerInt
 {
@@ -23,7 +22,7 @@ public class ServCompute implements ComputeServerInt
 	{
 		System.out.println( "Loading TASK" );
 		taskList.add( a );
-		return //EJERCICIO: returns an appropiate taskid
+		return taskList.size()-1;
 	}
 	
 	@Override
