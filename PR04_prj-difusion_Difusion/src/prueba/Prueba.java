@@ -30,7 +30,7 @@ public class Prueba {
   class CamaraDifusion extends Thread{
     Difusion difusion;
     InstantaneaD instantanea;
-    LinkedList listaEstados = new LinkedList();
+    LinkedList<EstadoRobotD> listaEstados = new LinkedList<EstadoRobotD>();
     EstadoRobotD st1 = new EstadoRobotD();
     EstadoRobotD st2 = new EstadoRobotD();
 

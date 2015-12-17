@@ -1,9 +1,9 @@
 package robot;
 
+import corba.instantanea.EstadoRobotD;
 import corba.instantanea.EstadoRobotDHolder;
-
+import corba.instantanea.InstantaneaD;
 import comm.*;
-import corba.instantanea.*;
 import corba.camara.*;
 
 /**
@@ -25,15 +25,20 @@ public class RobotSeguidorIntServerImpl extends corba.robot.RobotSeguidorIntPOA 
 	/**
 	 * Constructor for RobotSeguidorIntServerImpl 
 	 */
-	public RobotSeguidorIntServerImpl() {}
+	public RobotSeguidorIntServerImpl() {
+	}
 
-	public void ObtenerEstado(EstadoRobotDHolder est) 
-	{
-		est.value = new EstadoRobotD( minombre, miid, miIOR ); // new corba.instantanea.EstadoRobotD();		
+	public void ObtenerEstado(EstadoRobotDHolder est) {
+		// TODO Auto-generated method stub
+
+		//EJERCICIO: componer la instantanea a partir de EstadoRobotD y retornarla
+		
+	        //return _r;
+	        est.value = new corba.instantanea.EstadoRobotD(minombre, miid, miIOR); // new corba.instantanea.EstadoRobotD();
+	        
 	}
 	
-    public void start()
-    {
+    public void start(){
         new RobotDifusion().start();
     }
 
@@ -41,39 +46,38 @@ public class RobotSeguidorIntServerImpl extends corba.robot.RobotSeguidorIntPOA 
     // La clase anidada RobotDifusion
     //------------------------------------------------------------------------------
 
-    class RobotDifusion extends Thread
-    {
+    class RobotDifusion extends Thread{
 
       private Difusion difusion;
       private EstadoRobotD sr;
       private suscripcionD sus;
 
-      public void run()
-      {    	  
-    	  sus = camara.SuscribirRobot( miIOR );
-          miid=sus.id;
-    	  difusion = new Difusion( sus.iport );
-    	  
-    	  while(true)
-    	  {
-    		  
-    		  //EJERCICIO: recibir instantanea
-    		  instantanea = (InstantaneaD) difusion.receiveObject();        	
-    		  //EJERCICIO: iterar sobre la lista de estados, imprimiendo el nombre de
-    		  //todos los robots cuyo estado figura en la instantanea.
-    		  for( int i = 0; i < instantanea.estadorobs.length; i++ )
-    		  {
-    			  sr = instantanea.estadorobs[i];
-    			  System.out.println("Robot " + i + " : " + sr.nombre);
-    		  }
-    		  try
-    		  {
-    			  Thread.sleep(400);
-    		  }catch(InterruptedException e)
-    		  {
-    			  e.printStackTrace();
-    		  }
-    	  }
+      public void run(){
+      //EJERCICIO: suscribir el robot en la camara
+    	  System.out.println("Suscribir robot");
+    	 sus = camara.SuscribirRobot(miIOR);
+    	 System.out.println("Robot suscrito");
+      //EJERCICIO: crear la difusion
+    	 difusion = new Difusion(sus.iport);
+         miid=sus.id;
+         System.out.println("-> Robot lanzado con ID: " + miid);
+
+        while(true){
+           //EJERCICIO: recibir instantanea
+        		instantanea = (InstantaneaD) difusion.receiveObject();
+           //EJERCICIO: iterar sobre la lista de estados, imprimiendo el nombre de
+           //todos los robots cuyo estado figura en la instantanea.
+        	for(int i=0; i<instantanea.estadorobs.length; i++){
+                sr = instantanea.estadorobs[i];
+                System.out.println("Robot " + i + " : " + sr.nombre);
+            }
+	            
+          try{
+            Thread.sleep(400);
+          }catch(InterruptedException e){
+            e.printStackTrace();
+          }
+        }
       }
     }
 }

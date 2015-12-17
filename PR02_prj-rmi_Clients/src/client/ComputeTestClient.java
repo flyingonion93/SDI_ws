@@ -23,9 +23,9 @@ public class ComputeTestClient implements Serializable
 	{
 		String server_name = new String();
 		if( args.length == 1 )
-			server_name = "//" + args[0] + "/Compute";
+			server_name = "//" + args[0] + "/miComputeServer";
 		else
-			server_name = "//localhost/Compute";
+			server_name = "//localhost/miComputeServer";
 		
 		ComputeTestClient computeClient = new ComputeTestClient();
 		
@@ -39,7 +39,7 @@ public class ComputeTestClient implements Serializable
 		try
 		{
 			//EJERCICIO: "lookup" the Compute server RMI object
-			ComputeServerInt cs = (ComputeServerInt) Naming.lookup("//"+args[0]+"/miComputeServer");
+			ComputeServerInt cs = (ComputeServerInt) Naming.lookup( server_name );
 			//EJERCICIO: load the task (computeClient.echoTask) to the computeServer
 			int taskid = cs.loadTask( computeClient.echoTask );
 			stdOut.println("> ");
