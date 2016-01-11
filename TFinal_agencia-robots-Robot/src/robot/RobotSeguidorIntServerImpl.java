@@ -3,6 +3,7 @@ package robot;
 import org.omg.CORBA.ORB;
 import org.omg.PortableServer.POA;
 
+import comm.Difusion;
 import corba.camara.CamaraInt;
 import corba.camara.suscripcionD;
 import corba.instantanea.EstadoRobotD;
@@ -16,6 +17,7 @@ import khepera.control.Braitenberg;
 import khepera.control.Destino;
 import khepera.control.Trayectoria;
 import khepera.escenario.Escenario;
+import khepera.robot.IzqDer;
 import khepera.robot.Polares;
 import khepera.robot.Posicion;
 import khepera.robot.RobotKhepera;
@@ -49,12 +51,13 @@ public class RobotSeguidorIntServerImpl extends corba.robot.RobotSeguidorIntPOA 
 	/**
 	 * Constructor for RobotSeguidorIntServerImpl 
 	 */
-	public RobotSeguidorIntServerImpl( POA poa ) {
+	public RobotSeguidorIntServerImpl( POA poa )
+	{
 		poa_ = poa;
 		PosicionD centro = new PosicionD(0,0);
 		PosicionD[] sens = new PosicionD[9];
 		PosicionD[] finsens = new PosicionD[9];
-		PosicionD[] inter = new PosicionD[8];
+		PosicionD[] inter = new PosicionD[8]; 
 		for( int i = 0; i < 9; i++ )
 		{
 			sens[i] = new PosicionD(0,0);
@@ -63,7 +66,7 @@ public class RobotSeguidorIntServerImpl extends corba.robot.RobotSeguidorIntPOA 
 		{
 			finsens[i] = new PosicionD(0,0);
 		}
-		for( int i = 0; i < 9; i++ )
+		for( int i = 0; i < 8; i++ )
 		{
 			inter[i] = new PosicionD(0,0);
 		}
@@ -79,48 +82,45 @@ public class RobotSeguidorIntServerImpl extends corba.robot.RobotSeguidorIntPOA 
 	}
 
 	@Override
-	public void ObtenerEstado(EstadoRobotDHolder est) {
-		EstadoRobotD estadoRobot = new EstadoRobotD(
-				minombre,
-				miid,
-				miIOR,
-				referencia,
-				puntos,
-				posRef,
-				liderId);
+	public void ObtenerEstado(EstadoRobotDHolder est)
+	{	
+		EstadoRobotD estadoRobot = new EstadoRobotD( minombre, miid, miIOR, referencia, puntos, posRef, liderId );
 		est.value = estadoRobot;
 	}
 
 	@Override
-	public void ModificarEscenario(EscenarioD esc) {
+	public void ModificarEscenario(EscenarioD esc) 
+	{
 		escenario = new Escenario( esc );
 		khepera = new RobotKhepera( new PosicionD( 0, 0), escenario, 0);
 		System.out.println( "Escenario modificado" );		
 	}
 
 	@Override
-	public void ModificarObjetivo(PosicionD NuevoObj) {
+	public void ModificarObjetivo(PosicionD NuevoObj)
+	{
 		posRef = NuevoObj;
 		liderId = -1;
 		System.out.println("Nuevo Objetivo: " + new Posicion(NuevoObj).toString());
 	}
 
 	@Override
-	public void ModificarPosicion(PosicionD npos) {
+	public void ModificarPosicion(PosicionD npos) 
+	{
 		khepera.fijarPosicion(npos);
-		System.out.println("Nuevo Objetivo: " + new Posicion(npos).toString());
-		
+		System.out.println("Nuevo Objetivo: " + new Posicion(npos).toString());		
 	}
 
 	@Override
-	public void ModificarLider(int idLider) {
+	public void ModificarLider(int idLider) 
+	{
 		boolean encontrado = false;
 		if( instantanea != null )
 		{
 			for( int i = 0; i < instantanea.estadorobs.length; i++ )
 			{
 				EstadoRobotD estadoRob = instantanea.estadorobs[i];
-				if( estadoRob.id == idLider  && estadoRob.id != this.miid )
+				if( estadoRob.id == idLider  && estadoRob.id != miid )
 				{
 					liderId = idLider;
 					encontrado = true;
@@ -133,25 +133,86 @@ public class RobotSeguidorIntServerImpl extends corba.robot.RobotSeguidorIntPOA 
 		}
 	}
 	
-	void MovimientoRobot()
-	{
-		
-	}
-	
 	public void start()
 	{
+		new RobotDifusion().start();	
+	}
 	
+	private void MovimientoRobot()
+	{
+		IzqDer v1 = new IzqDer();
+		IzqDer v2 = new IzqDer();
+		
+		khepera.avanzar();
+		posicion = khepera.posicionPolares();
+		puntos = khepera.posicionRobot();
+		trayectoria = new Trayectoria( posicion,  posRef );
+		float[] listaSensores = khepera.leerSensores();
+		
+		v1 = destino.calcularVelocidad( trayectoria );
+		v2 = bra.calcularVelocidad( listaSensores );
+		v1.izq += v2.izq / 90;
+		v1.der += v2.der / 90;
+		khepera.fijarVelocidad( v1.izq, v1.der );
 	}
 	
 	class RobotDifusion extends Thread
 	{
 		private Difusion difusion;
-		private EstadoRobotD estadoRob;
+		private EstadoRobotD sr;
 		private suscripcionD sus;
+		private int ident = -1;
+		
+		RobotDifusion(){}
 		
 		public void run()
-		{
-			
+		{			
+			sus = camara.SuscribirRobot( miIOR );
+			try
+			{
+				difusion = new Difusion( sus.iport );				
+			}catch( Exception e )
+			{
+				e.printStackTrace();
+			}
+			miid = sus.id;
+			escenario = new Escenario( sus.esc );			
+			khepera = new RobotKhepera( new PosicionD( 0, 0 ), escenario, 0 );
+			instantanea = (InstantaneaD) difusion.receiveObject();
+			for( int i = 0; i < instantanea.estadorobs.length; i++ )
+			{
+				sr = instantanea.estadorobs[i];
+				if( sr.id == miid )
+					ident = i;				
+			}
+			if( ident > 0 )
+			{
+				indexLider = ident - 1;
+				liderId = instantanea.estadorobs[indexLider].id;				
+			}
+			while( true )
+			{
+				instantanea = (InstantaneaD) difusion.receiveObject();
+				for( int i = 0; i < instantanea.estadorobs.length; i++ )
+				{
+					sr = instantanea.estadorobs[i];
+					if( sr.id == liderId && sr.id != miid )
+					{
+						indexLider = i;
+					}
+				}
+				try
+				{
+					if( liderId >= 0 )
+						posRef = instantanea.estadorobs[indexLider].puntrob.centro;
+					
+				}catch( Exception e )
+				{
+					liderId = -1;
+				}
+				
+				MovimientoRobot();
+			}
 		}
 	}
 }

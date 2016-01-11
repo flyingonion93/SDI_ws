@@ -14,8 +14,8 @@ public class Server_AOM_Camara {
 	
 	private static corba.camara.IPYPortD ipyport;
 	
-	public static void main(String[] args) {
-
+	public static void main(String[] args) 
+	{
 		Properties props = System.getProperties();
 		props.setProperty("org.omg.CORBA.ORBClass", "com.sun.corba.se.internal.POA.POAORB");
 		props.setProperty("org.omg.CORBA.ORBSingletonClass", "com.sun.corba.se.internal.corba.ORBSingleton");
@@ -29,7 +29,8 @@ public class Server_AOM_Camara {
 		System.out.println("Difusion por canal. " + ipyport.ip + " / " + ipyport.port);
 
 
-		try {
+		try 
+		{
 			org.omg.CORBA.ORB orb = org.omg.CORBA.ORB.init(args, props);
 			org.omg.CORBA.Object obj = orb.resolve_initial_references("RootPOA");
 			POA poaRoot = POAHelper.narrow(obj);
@@ -39,18 +40,25 @@ public class Server_AOM_Camara {
 			};
 			POA poa = poaRoot.create_POA("CamaraIntServerImpl_poa",	poaRoot.the_POAManager(), policies);
 			CamaraIntServerImpl servant = new CamaraIntServerImpl(orb,poa,ipyport);
-			byte[] objectId = "Camara".getBytes();
+			byte[] objectId = "AnyObjectID".getBytes();
 			poa.activate_object_with_id(objectId, servant);
 			poaRoot.the_POAManager().activate();
 			obj = poa.servant_to_reference(servant);
-			org.omg.CORBA.Object ncobj = orb.resolve_initial_references("NameService");
-			NamingContextExt nc = NamingContextExtHelper.narrow(ncobj);
-			nc.rebind(nc.to_name("Camara"), obj);
+			try
+			{
+				org.omg.CORBA.Object ncobj = orb.resolve_initial_references("NameService");
+				NamingContextExt nc = NamingContextExtHelper.narrow(ncobj);
+				nc.rebind(nc.to_name("Camara"), obj);	
+			} catch( Exception e )
+			{
+				e.printStackTrace();
+				System.err.println( "Cámara no registrada" );
+			}
 			servant.start();
 			System.out.println("Camara Server ready...");
 			orb.run();
-		}
-		catch(Exception ex) {
+		}catch(Exception ex) 
+		{
 			ex.printStackTrace();
 		}
 	}
